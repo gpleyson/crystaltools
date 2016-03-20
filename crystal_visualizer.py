@@ -1,19 +1,19 @@
-import os
-import sys
-import pdb
-import time
+# import os
+# import sys
+# import time
 import copy
 import numpy as np
-import scipy as sp
+# import scipy as sp
 import crystaltools as ct
 import matplotlib.pyplot as plt
-import matplotlib        as mpl
-from mpl_toolkits.mplot3d import Axes3D
-from mpl_toolkits.mplot3d import proj3d
+# import matplotlib        as mpl
+# from mpl_toolkits.mplot3d import Axes3D
+# from mpl_toolkits.mplot3d import proj3d
+
 
 class CrystalPlot2D():
-    def __init__(self, ms=180., lc='k', lw=1.5, mfc='r', marker='o', \
-            fwidth = 4., fheight=4., bool_interactive=True):
+    def __init__(self, ms=180., lc='k', lw=1.5, mfc='r', marker='o',
+                 fwidth=4., fheight=4., bool_interactive=True):
         self.ms = ms
         self.marker = marker
         self.lc = lc
@@ -27,7 +27,7 @@ class CrystalPlot2D():
         plt.rc('text', usetex=True)
         plt.rc('font', family='serif')
 
-    def plot_simple(self, crystal, v1=[], v2=[], fignum=1 ):
+    def plot_simple(self, crystal, v1=[], v2=[], fignum=1):
         """
             Simple 2D plot of the crystal
             crys - crsytal
@@ -37,23 +37,22 @@ class CrystalPlot2D():
         crys = copy.deepcopy(crystal)
 
         # set default values for v1 and v2 if not defined
-        if len(v1)==0:
-            v1 = crys.lattvec()[0,:]
-        if len(v2)==0:
-            v2 = crys.lattvec()[1,:]
+        if len(v1) == 0:
+            v1 = crys.lattvec()[0, :]
+        if len(v2) == 0:
+            v2 = crys.lattvec()[1, :]
 
         # calculate rotation matrix
-        Rmat = ct.create_rotation_matrix(v1,v2)
+        Rmat = ct.create_rotation_matrix(v1, v2)
 
         # rotate crystal
         crys.rotate_crystal(Rmat)
         crys.reflect_atoms()
 
-
         if self.bool_interactive:
             plt.ion()
 
-        fig = plt.figure(fignum,figsize=(self.fwidth,self.fheight))
+        fig = plt.figure(fignum, figsize=(self.fwidth, self.fheight))
         fig.clf()
         ax = fig.add_subplot(111)
         hf2 = self._plot_crystal_cell(crys, ax)
@@ -64,17 +63,17 @@ class CrystalPlot2D():
         return crys, fig, ax
 
     def _scatter_basis(self, crys, ax, zorder=2):
-        xcar = crys.xcar()
-        ycar = crys.ycar()
-        #hfig = ax.scatter(xcar, ycar, marker=self.marker, s=self.ms, \
-        #        facecolors=self.mfc, zorder=zorder)
+        xcar = crys.xcar
+        ycar = crys.ycar
+        # hfig = ax.scatter(xcar, ycar, marker=self.marker, s=self.ms, \
+        #         facecolors=self.mfc, zorder=zorder)
 
         for ii in range(len(xcar)):
             x = xcar[ii]
             y = ycar[ii]
-            z = crys.zcar()[ii] // 1
-            hfig = ax.scatter(x, y, marker=self.marker, s=self.ms, \
-                    facecolors=self.mfc, zorder=z)
+            z = int(crys.zcar[ii] // 1)
+            hfig = ax.scatter(x, y, marker=self.marker, s=self.ms,
+                              facecolors=self.mfc, zorder=z)
 
             print z
 
@@ -82,9 +81,9 @@ class CrystalPlot2D():
 
     def _plot_crystal_cell(self, crys, ax):
         p0 = np.zeros(2)
-        p1 = crys.lattvec()[0,0:2] * crys.scale()
-        p2 = crys.lattvec()[1,0:2] * crys.scale()
-        p3 = crys.lattvec()[2,0:2] * crys.scale()
+        p1 = crys.lattvec[0, 0:2] * crys.scale
+        p2 = crys.lattvec[1, 0:2] * crys.scale
+        p3 = crys.lattvec[2, 0:2] * crys.scale
 
         hfig = self._plot_line(ax, p0      , p1      , zorder=-100)
         hfig = self._plot_line(ax, p1      , p1+p2   , zorder=-100)
@@ -99,15 +98,14 @@ class CrystalPlot2D():
         hfig = self._plot_line(ax, p1+p2   , p1+p2+p3, zorder=-100)
         hfig = self._plot_line(ax, p2      , p2   +p3, zorder=-100)
 
-
-        #hfig = self._plot_line(ax, p0, p2, zorder=3)
-        #hfig = self._plot_line(ax, p0, p3, zorder=3)
-        #hfig = self._plot_line(ax, p0, p3, zorder=3)
-
+        # hfig = self._plot_line(ax, p0, p2, zorder=3)
+        # hfig = self._plot_line(ax, p0, p3, zorder=3)
+        # hfig = self._plot_line(ax, p0, p3, zorder=3)
 
     def _plot_line(self, ax, p1, p2, zorder=1):
         """ Plots a line from p1 to p2 """
-        hfig = ax.plot([p1[0], p2[0]], [p1[1], p2[1]], '-', lw=self.lw, color=self.lc)
+        hfig = ax.plot([p1[0], p2[0]], [p1[1], p2[1]], '-',
+                       lw=self.lw, color=self.lc)
 
         return hfig
 
@@ -149,11 +147,10 @@ class CrystalPlot3D():
         crys.rotate_crystal(Rmat)
         crys.reflect_atoms()
 
-
         if self.bool_interactive:
             plt.ion()
 
-        fig = plt.figure(fignum,figsize=(self.fwidth,self.fheight))
+        fig = plt.figure(fignum, figsize=(self.fwidth, self.fheight))
         fig.clf()
         ax = fig.add_subplot(111, projection='3d')
         hf2 = self._plot_crystal_cell(crys, ax)
@@ -163,17 +160,17 @@ class CrystalPlot3D():
         ax.set_xlabel('x')
         ax.set_ylabel('y')
         ax.set_zlabel('z')
-        fig.set_size_inches(self.fwidth,self.fheight)
+        fig.set_size_inches(self.fwidth, self.fheight)
 
         return crys, fig, ax
 
     def _scatter_basis(self, crys, ax, zorder=2):
-        xcar = crys.xcar()
-        ycar = crys.ycar()
-        zcar = crys.zcar()
+        xcar = crys.xcar
+        ycar = crys.ycar
+        zcar = crys.zcar
 
-        hfig = ax.scatter(xcar, ycar, zcar,  marker=self.marker, s=self.ms, \
-                facecolors=self.mfc, zorder=zorder)
+        hfig = ax.scatter(xcar, ycar, zcar,  marker=self.marker, s=self.ms,
+                          facecolors=self.mfc, zorder=zorder)
 
         max_range = np.array(
                 [xcar.max()-xcar.min(), ycar.max()-ycar.min(),
@@ -190,9 +187,9 @@ class CrystalPlot3D():
 
     def _plot_crystal_cell(self, crys, ax):
         p0 = np.zeros(3)
-        p1 = crys.lattvec()[0,:] * crys.scale()
-        p2 = crys.lattvec()[1,:] * crys.scale()
-        p3 = crys.lattvec()[2,:] * crys.scale()
+        p1 = crys.lattvec[0,:] * crys.scale
+        p2 = crys.lattvec[1,:] * crys.scale
+        p3 = crys.lattvec[2,:] * crys.scale
 
         hfig = self._plot_line(ax, p0      , p1      , zorder=1)
         hfig = self._plot_line(ax, p1      , p1+p2   , zorder=1)
@@ -233,21 +230,21 @@ if __name__ == "__main__":
     proj3d.persp_transformation = orthogonal_proj
 
     unit = ct.get_unit_cell('fcc primitive', 2.8)
-    unit = ct.get_unit_cell('bcc cubic', 2.8)
-    #unit = ct.get_unit_cell('fcc cubic', 2.8)
-    #sc = unit.create_supercell(10,10,10, name='supercell')
+    # unit = ct.get_unit_cell('bcc cubic', 2.8)
+    # unit = ct.get_unit_cell('fcc cubic', 2.8)
+    # sc = unit.create_supercell(10,10,10, name='supercell')
     sc = unit.create_supercell(5,5,5, name='supercell')
     #sc = unit.create_supercell(10,10,10, name='supercell')
 
     v1 = np.array([1,1,0])
     v2 = np.array([-1,1,1])
-    #v2 = np.array([1,1,-2])
+    # v2 = np.array([1,1,-2])
 
-    #v1 = np.array([1,0,0])
-    #v2 = np.array([0,1,0])
+    # v1 = np.array([1,0,0])
+    # v2 = np.array([0,1,0])
 
-    #v1 = np.array([1,1,0])
-    #v2 = np.array([1,0,1])
+    # v1 = np.array([1,1,0])
+    # v2 = np.array([1,0,1])
 
     myplot = CrystalPlot2D(lc='0.5')
     myplot.ms = 40
@@ -257,7 +254,6 @@ if __name__ == "__main__":
     #v2 = np.array([0,1,0])
     myplot = CrystalPlot3D(lc='0.5', ms=80)
     crys, fig, ax = myplot.plot_simple(sc, v1, v2, fignum=2)
-
 
     #for ii in range(1):
     #    unit = cg.get_unit_cell('fcc primitive', 2.8)
