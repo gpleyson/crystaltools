@@ -1,7 +1,5 @@
 import numpy as np
 import sys
-# import time
-# from itertools import izip
 
 
 class Crystal(object):
@@ -585,11 +583,13 @@ if __name__ == "__main__":
     v2 = np.array([0., 1., 0.])
     v3 = np.cross(v1, v2)
 
+
     sc = unit.create_supercell(10, 10, 10, name='supercell')
     # sc = unit.create_supercell(4,4,4, name='supercell')
     newcell = unit.create_new_orientation(v1, v2, v3, name='new orientation')
     newcell.reorient()
 
+    help(sc)
     # Rmat = create_rotation_matrix(v1, v2)
     # newcell.rotate_crystal(Rmat)
 

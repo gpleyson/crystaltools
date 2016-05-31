@@ -8,7 +8,7 @@ import crystaltools as ct
 import matplotlib.pyplot as plt
 # import matplotlib        as mpl
 # from mpl_toolkits.mplot3d import Axes3D
-# from mpl_toolkits.mplot3d import proj3d
+from mpl_toolkits.mplot3d import proj3d
 
 
 class CrystalPlot2D():
@@ -233,11 +233,11 @@ if __name__ == "__main__":
     # unit = ct.get_unit_cell('bcc cubic', 2.8)
     # unit = ct.get_unit_cell('fcc cubic', 2.8)
     # sc = unit.create_supercell(10,10,10, name='supercell')
-    sc = unit.create_supercell(5,5,5, name='supercell')
-    #sc = unit.create_supercell(10,10,10, name='supercell')
+    sc = unit.create_supercell(5, 5, 5, name='supercell')
+    # sc = unit.create_supercell(10,10,10, name='supercell')
 
-    v1 = np.array([1,1,0])
-    v2 = np.array([-1,1,1])
+    v1 = np.array([1, 1, 0])
+    v2 = np.array([-1, 1, 1])
     # v2 = np.array([1,1,-2])
 
     # v1 = np.array([1,0,0])
@@ -250,8 +250,8 @@ if __name__ == "__main__":
     myplot.ms = 40
     crys, fig, ax = myplot.plot_simple(sc, v1, v2)
 
-    #v1 = np.array([1,0,0])
-    #v2 = np.array([0,1,0])
+    # v1 = np.array([1,0,0])
+    # v2 = np.array([0,1,0])
     myplot = CrystalPlot3D(lc='0.5', ms=80)
     crys, fig, ax = myplot.plot_simple(sc, v1, v2, fignum=2)
 

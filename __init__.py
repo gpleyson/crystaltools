@@ -1,4 +1,8 @@
 # crystaltools __init__.py
-from crystal_generator      import Crystal
-from crystal_generator      import get_unit_cell
-from crystal_generator      import create_rotation_matrix
+from crystal_generator import Crystal
+from crystal_generator import get_unit_cell
+from crystal_generator import create_rotation_matrix
+from crystal_generator import find_distances
+from crystal_visualizer import CrystalPlot2D
+from crystal_visualizer import CrystalPlot3D
+from murnagahn import fitMurnagahn
