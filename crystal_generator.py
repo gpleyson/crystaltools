@@ -12,7 +12,7 @@ class Crystal(object):
         self._name = ''            # name of the crystal
         self._rcar = []            # Cartesian coodinates
         self._rrel = []            # relative coordinates
-        self._scale = []           # scale of the lattice vectors
+        self._scale = 1.           # scale of the lattice vectors
         self._lattvec = np.eye(3)  # lattice vectors
         self._itype = []           # integer identifier of the basis atoms
         self._natoms = []          # number of atoms
@@ -104,6 +104,11 @@ class Crystal(object):
     def itype(self):
         """ Return interger type identifier of basis atoms """
         return self._itype
+
+    @itype.setter
+    def itype(self, new_itype):
+        """ Sets itype of the crystal """
+        self._itype = new_itype
 
     @property
     def stype(self):

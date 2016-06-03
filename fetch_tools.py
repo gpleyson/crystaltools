@@ -45,7 +45,6 @@ def get_aggregate_data(aggregate_fxn, path_list, verbose=False):
     for ii, file_path in enumerate(path_list):
         if verbose:
             progress_bar(ii, ii_max, ' - Processing {}'.format(file_path))
-            sys.stdout.flush()
         try:
             data_series = aggregate_fxn(file_path)
             df_aggregate = df_aggregate.append(data_series, ignore_index=True)

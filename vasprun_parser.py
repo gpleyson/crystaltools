@@ -11,7 +11,8 @@ class VasprunParser(object):
         from vasprun.xml.
         *** DEPRECATED ***
         This class has been separated into two classes; one to parse xml
-        and convert it to h5, and one to load and query the h5 file
+        and convert it to h5 (VasprunXMLParser), and one to load and query
+        the h5 file (VasprunHDFParser).
     """
     def __init__(self):
         self.dict_vasprun = {}
