@@ -24,7 +24,7 @@ class CrystalPlot2D():
         plt.rc('text', usetex=True)
         plt.rc('font', family='serif')
 
-    def plot_simple(self, crystal, v1=[], v2=[], fignum=1):
+    def plot_simple(self, crystal, ax, v1=[], v2=[], fignum=1):
         """
             Simple 2D plot of the crystal
             crys - crsytal
@@ -49,15 +49,12 @@ class CrystalPlot2D():
         if self.bool_interactive:
             plt.ion()
 
-        fig = plt.figure(fignum, figsize=(self.fwidth, self.fheight))
-        fig.clf()
-        ax = fig.add_subplot(111)
         self._plot_crystal_cell(crys, ax)
         self._scatter_basis(crys, ax, zorder=5)
 
-        plt.axis('equal')
+        # plt.axis('equal')
 
-        return crys, fig, ax
+        return crys
 
     def _scatter_basis(self, crys, ax, zorder=2):
         xcar = crys.xcar
@@ -117,7 +114,7 @@ class CrystalPlot3D():
         plt.rc('text', usetex=True)
         plt.rc('font', family='serif')
 
-    def plot_simple(self, crystal, v1=[], v2=[], fignum=1):
+    def plot_simple(self, crystal, ax, v1=[], v2=[], fignum=1):
         """
             Simple 2D plot of the crystal
             crys - crsytal
@@ -142,9 +139,9 @@ class CrystalPlot3D():
         if self.bool_interactive:
             plt.ion()
 
-        fig = plt.figure(fignum, figsize=(self.fwidth, self.fheight))
-        fig.clf()
-        ax = fig.add_subplot(111, projection='3d')
+        # fig = plt.figure(fignum, figsize=(self.fwidth, self.fheight))
+        # fig.clf()
+        # ax = fig.add_subplot(111, projection='3d')
         self._plot_crystal_cell(crys, ax)
         self._scatter_basis(crys, ax, zorder=5)
 
@@ -152,9 +149,9 @@ class CrystalPlot3D():
         ax.set_xlabel('x')
         ax.set_ylabel('y')
         ax.set_zlabel('z')
-        fig.set_size_inches(self.fwidth, self.fheight)
+        # fig.set_size_inches(self.fwidth, self.fheight)
 
-        return crys, fig, ax
+        return crys
 
     def _scatter_basis(self, crys, ax, zorder=2):
         xcar = crys.xcar

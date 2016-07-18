@@ -1,5 +1,6 @@
 import numpy as np
 import sys
+import os
 
 
 class Crystal(object):
@@ -183,6 +184,7 @@ class Crystal(object):
     def delete_atom(self, idnull):
         """ Delete atoms in the crystal  """
         self.rcar = np.delete(self._rcar, idnull, 0)
+        self.itype = np.delete(self._itype, idnull)
         self._consolidate_details()
 
     def translate_cartesian(self, rtrans_cart):
@@ -443,11 +445,73 @@ class Crystal(object):
 
         return neighbor_list
 
+    def to_POSCAR(self, outdir, outfname, title='Generic POSCAR'):
+        """
+            Creates a POSCAR file in outdir with filename outfname.
+            :params:
+                outdir:(string):
+                    Output directory
+                outfname:(string):
+                    Output filename
+                title:(string):default='Generic POSCAR'
+                    Title of POSCAR
+        """
+        with open(os.path.join(outdir, outfname), 'w') as fh:
+            # write title
+            fh.write(title + '\n')
+
+            # write scale
+            fh.write('%10.5f \n' % (self.scale))
+
+            # write cell vectors
+            fh.write('%10.5f %10.5f %10.5f \n'
+                     % (self.lattvec[0, 0],
+                        self.lattvec[0, 1],
+                        self.lattvec[0, 2]))
+            fh.write('%10.5f %10.5f %10.5f \n'
+                     % (self.lattvec[1, 0],
+                        self.lattvec[1, 1],
+                        self.lattvec[1, 2]))
+            fh.write('%10.5f %10.5f %10.5f \n'
+                     % (self.lattvec[2, 0],
+                        self.lattvec[2, 1],
+                        self.lattvec[2, 2]))
+
+            # write number of atoms
+            atomCount = np.zeros(len(self.dict_types))
+            for ii in range(atomCount.size):
+                atomCount[ii] = np.size(np.nonzero(self.itype == ii+1)[0])
+                fh.write('%4i ' % (atomCount[ii]))
+            fh.write('\n' % (atomCount[ii]))
+
+            # write coordinate scheme
+            fh.write('Direct\n')
+
+            # write coordinates
+            for ii in range(self.natoms):
+                fh.write('%20.15f %20.15f %20.15f \n'
+                         % (self.rrel[ii, 0],
+                            self.rrel[ii, 1],
+                            self.rrel[ii, 2]))
+
+        return
+
 
 def get_unit_cell(uc_name, a=[], b=[], c=[]):
     """
         A crystal subclass with predefined unit cells of
-        common crystals
+        common crystals.
+
+        :params:
+            uc_name:(string):
+                predefined unit cells:
+                    'simple cubic'
+                    'bcc cubic'
+                    'fcc cubic'
+                    'fcc primitive'
+                    'rocksalt primitive'
+                a, b, c:(float):
+                    a, b and c parameters of the crystal as appropriate
     """
     # Initialize the relative coordinates
     rrel = []
@@ -514,9 +578,9 @@ def get_unit_cell(uc_name, a=[], b=[], c=[]):
         natoms = 1
         dict_types = {1: 'A'}
         scale = a
-        lattvec1 = np.array([0.5, 0.5, 0.0])
+        lattvec1 = np.array([0.0, 0.5, 0.5])
         lattvec2 = np.array([0.5, 0.0, 0.5])
-        lattvec3 = np.array([0.0, 0.5, 0.5])
+        lattvec3 = np.array([0.5, 0.5, 0.0])
         rrel = np.zeros([natoms, 3])
         itype = np.zeros(natoms).astype('int')
         #
@@ -524,10 +588,27 @@ def get_unit_cell(uc_name, a=[], b=[], c=[]):
         rrel[ii, :] = np.array([0.0, 0.0, 0.0])
         itype[ii] = 1
         #
-        # TODO: hexagonal unit cells
-        #       - additional support for hexagonal structures
-        #           > hex indices to conventional miller indices
-        # elif uc_name=='simple hexagonal':
+    elif uc_name == 'rocksalt primitive':
+        natoms = 2
+        dict_types = {1: 'A', 2: 'B'}
+        scale = a
+        lattvec1 = np.array([0.0, 0.5, 0.5])
+        lattvec2 = np.array([0.5, 0.0, 0.5])
+        lattvec3 = np.array([0.5, 0.5, 0.0])
+        rrel = np.zeros([natoms, 3])
+        itype = np.zeros(natoms).astype('int')
+        #
+        ii = 0
+        rrel[ii, :] = np.array([0.0, 0.0, 0.0])
+        itype[ii] = 1
+        #
+        ii = 1
+        rrel[ii, :] = np.array([0.5, 0.5, 0.5])
+        itype[ii] = 2
+        #
+    else:
+        print('Unknown crystal structure.')
+        return
 
     unit_cell = Crystal(name=uc_name)
     unit_cell._scale = scale
@@ -587,7 +668,6 @@ if __name__ == "__main__":
     v1 = np.array([1., 0., 0.])
     v2 = np.array([0., 1., 0.])
     v3 = np.cross(v1, v2)
-
 
     sc = unit.create_supercell(10, 10, 10, name='supercell')
     # sc = unit.create_supercell(4,4,4, name='supercell')

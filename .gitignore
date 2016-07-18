@@ -1,3 +1,4 @@
 # Python files
 *.pyc
 .ropeproject
+.ipynb_checkpoints
