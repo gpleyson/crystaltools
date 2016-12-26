@@ -437,7 +437,7 @@ class VasprunXMLParser(object):
                 self.dict_vasprun - dictionary representation of the
                     vasprun.xml
         """
-        path = os.join(self.directory, self.filename)
+        path = os.path.join(self.directory, self.filename)
         root = ET.parse(path).getroot()
         try:
             self.dict_vasprun = parse_node(root)
